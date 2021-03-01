@@ -1,15 +1,16 @@
 #include <iostream>
 #include <stdlib.h> //for setw
 #include <iomanip> //for getw
+#include <fstream> //read and write files
 using namespace std;
 
 int board[10][10]; // Two-dimensional array for gameboard.
 
-class Board {
-  public:
-    int board;
-    string myString;
-};
+// class Board {
+//   public:
+//     int board;
+//     string myString;
+// };
 
 void initialise_board( int array1[ 10 ][ 10 ] ) {
   // create a blank board   
@@ -54,6 +55,20 @@ void print_board(int array2[10][10]) {
 
 
 int main() {
+  string myText;
+
+  // Read from the text file
+  ifstream MyReadFile("adaship_config.ini");
+
+  // Use a while loop together with the getline() function to read the file line by line
+  while (getline (MyReadFile, myText)) {
+    // Output the text from the file
+    cout << myText;
+  }
+
+  // Close the file
+  MyReadFile.close();
+
   initialise_board(board);
   print_board(board);
 }
