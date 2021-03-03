@@ -2,73 +2,101 @@
 #include <stdlib.h> //for setw
 #include <iomanip> //for getw
 #include <fstream> //read and write files
+#include <vector> //vectors
+#include <sstream> //string stream
 using namespace std;
 
-int board[10][10]; // Two-dimensional array for gameboard.
+class Game {
+  private:
+    struct boat {
+      string name;
+      int size;
+    };
+    vector<boat> player_boats;
+    vector<boat> enemy_boats;
 
-// class Board {
-//   public:
-//     int board;
-//     string myString;
-// };
+    int player_board[80][80];
+    int board_size;
 
-void initialise_board( int array1[ 10 ][ 10 ] ) {
-  // create a blank board   
-  for (int x=0; x<10; x++) {
-    for (int y=0; y<10; y++) {
-      array1[x][y] = 0;
-    }     
-  }     
-}
+    const int empty    = 0;  // contains water
+    const int occupied = 1;  // contains a ship
+    const int miss     = 2;  // shot into ocean
+    const int hit      = 3;  // shot and hit
 
-void print_board(int array2[10][10]) {
-  const int empty    = 0;  // contains water
-  const int occupied = 1;  // contains a ship
-  const int miss     = 2;  // shot into ocean
-  const int hit      = 3;  // shot and hit
+    void loadData() {
+      string type, data, str_board_size, boat_name, boat_size;
+      int counter = 0;
 
-  for(char a = 'A'; a <= 'J'; a++) { //letter coordinates
-    cout << setw(5) << a;
-  }
-  cout << endl;
+      ifstream game_config("adaship_config.ini"); //opening data file to read it
 
-  for(int i = 1; i <= 10; i++) { //number coordinates
-    if(i == 10)
-      cout << i;
-    else
-      cout << " " << i ;
-        
-    for(int j = 0; j < 10 ; j++) {
-      if(array2[i][j] == occupied || array2[i][j] == empty) {
-        cout << setw(5) << " |" ;
+      while (getline(getline(game_config, type, ':'), data)){ //looping through each line of the file
+        if (type == "Board") {
+            stringstream ss(data);
+            getline(ss, str_board_size, 'x');
+            board_size = stoi(str_board_size);
+        }
+        else if (type == "Boat") {
+          stringstream ssb(data);
+          player_boats.push_back(boat());
+          enemy_boats.push_back(boat());
+
+          while (getline(getline(ssb, boat_name, ','), boat_size)){
+            player_boats[counter] = {boat_name, stoi(boat_size)};
+            enemy_boats[counter] = {boat_name, stoi(boat_size)};
+            counter++;
+          }
+        }
+      };
+      game_config.close(); //closing the data file to save memory
+    }
+
+  protected:
+
+  public:
+    Game() {
+      loadData();
+    }
+
+    void initialise_board() {
+      for (int y=0; y<board_size; y++) {
+        for (int x=0; x<board_size; x++) {
+          player_board[x][y] = 0;
+        }     
       }
-      else if(array2[i][j] == miss ) {
-        cout << setw(5) << "O|";
+      player_board[3][7] = 2; 
+    }
+
+    void print_board() {
+      for(char a = 'A'; a <= 'J'; a++) { //letter coordinates
+        cout << setw(4) << a;
       }
-      else if(array2[i][j] == hit ) {
-        cout << setw(5) << "X|";
+      cout << endl;
+
+      for(int j = 0; j < 10; j++) { //number coordinates
+        if(j == board_size-1)
+          cout << j+1;
+        else
+          cout << " " << j+1 ;
+            
+        for(int i = 0; i < 10 ; i++) {
+          // cout << " " << i << j << " ";// << player_board[i][j];
+          if(player_board[i][j] == occupied || player_board[i][j] == empty) {
+            cout << setw(4) << " |" ;
+          }
+          else if(player_board[i][j] == miss ) {
+            cout << setw(2) << "M" << setw(2) << "|";
+          }
+          else if(player_board[i][j] == hit ) {
+            cout << setw(2) << "H" << setw(2) << "|";;
+          }
+        }
+        cout << "\n";
       }
     }
-    cout << "\n";
-  }
-}
-
+};
 
 int main() {
-  string myText;
-
-  // Read from the text file
-  ifstream MyReadFile("adaship_config.ini");
-
-  // Use a while loop together with the getline() function to read the file line by line
-  while (getline (MyReadFile, myText)) {
-    // Output the text from the file
-    cout << myText;
-  }
-
-  // Close the file
-  MyReadFile.close();
-
-  initialise_board(board);
-  print_board(board);
+  Game my_game;
+  my_game.initialise_board();
+  my_game.print_board();
 }
