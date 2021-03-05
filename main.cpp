@@ -104,6 +104,39 @@ class Board {
     void print_target_board() {
       print_board(target_board);
     }
+
+    vector<int> format_coordinate(string coordinate) {
+      const string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      int x_value = 0, y_value = 0, y_start_pos;
+      string x_coordinates;
+
+      vector<char> split_coordinate(coordinate.begin(), coordinate.end());
+
+      for (int i=0; i < split_coordinate.size(); i++) {
+        const auto pos = alpha.find(toupper(split_coordinate[i]));
+        if( pos != std::string::npos ) {
+          y_start_pos = i;
+          break;
+        }
+      }
+
+      for (int x=0; x < y_start_pos; x++) {
+        x_coordinates += split_coordinate[x];
+      }
+      x_value = stoi(x_coordinates)-1;
+
+    
+      for (int y=y_start_pos; y < split_coordinate.size(); y++){
+        y_value += alpha.find(toupper(split_coordinate[y]));
+        if (y != y_start_pos) {
+          y_value += 26*(alpha.find(toupper(split_coordinate[y]))+1);
+        }
+        cout << "itteration y= " << y_value << endl;
+      }
+      cout << "x= " << x_value << endl;
+      cout << "y= " << y_value << endl;
+      return {x_value, y_value};
+    }
 };
 
 class Boats: public Board {
@@ -161,30 +194,99 @@ class Boats: public Board {
     }
 };
 
-int main() {
-  Boats player;
-  player.print_boats();
-  player.print_target_board();
-  player.print_ship_board();
+int set_up(Boats _player) {
+  int menu_choice = -1;
 
-  // player.place_boat(first_coordinate, last_coordinate, "Carrier");
-  int return_code = player.place_boat({5,0}, 'V', "Carrier");
-  if (return_code == 1) {
-    cout << "incorrect ship placement";
+  while (menu_choice != 0) {
+    string ship_entered, coordinate;
+    char ship_direction;
+
+    cout << "\nFirst you need to set up your board.\n";
+    cout << "1. Place a ship\n2. Auto-place remaining ships\n3. Auto-place all ships\n4. Reset board\n5. Continue to game\nPlease select an option (or 0 to quit): ";
+  
+    if( ! (cin >> menu_choice)) { //catching erroneous input
+      cout << "Invalid input\n";
+      cin.clear(); //clearing the error from cin stream
+      cin.ignore(10000, '\n');
+      menu_choice = -1;
+      continue; //continuing to the next iteration of the loop
+    }
+    cin.ignore();
+
+    switch (menu_choice) {
+      case 1:
+        cout << "\nYour ship board:\n";
+        _player.print_ship_board();
+
+        cout << "Your ships:\n";
+        _player.print_boats();
+
+        cout << "\nEnter ship name: ";
+        getline(cin, ship_entered);
+
+        cout << "Enter where you want the ship to start (e.g. F7): ";
+        getline(cin, coordinate);
+        vector<int> formatted_coordinate = _player.format_coordinate(coordinate);
+
+        cout << "Is the ship vertical(V) or horizontal(H): ";
+        ship_direction = cin.get();
+
+
+        //_player.place_boat(formatted_coordinate, ship_direction, ship_entered);
+
+    }
+
   }
-  return_code = player.place_boat({7,7}, 'V', "Battleship");
-  if (return_code == 1) {
-    cout << "incorrect ship placement";
-  }
-  return_code = player.place_boat({6,7}, 'H', "Battleship");
-  if (return_code == 1) {
-    cout << "incorrect ship placement";
-  }
-  return_code = player.place_boat({6,5}, 'V', "Destroyer");
-  if (return_code == 1) {
-    cout << "incorrect ship placement";
-  }
-  player.print_ship_board();
+  
+
+  return 0;
+}
+
+int main() {
+  int menu_choice = -1;
+  cout << "Welcome to Adaships!" << endl;
+
+  while (menu_choice != 0) {
+    cout << "1. One player V computer game\n\nPlease select an option (or 0 to quit): ";
+    if( ! (cin >> menu_choice)) { //catching erroneous input
+      cout << "Invalid input\n";
+      cin.clear(); //clearing the error from cin stream
+      cin.ignore(10000, '\n');
+      menu_choice = -1;
+      continue; //continuing to the next iteration of the loop
+    }
+    if (menu_choice == 0) {
+      break;
+    }
+    Boats player;
+    set_up(player);
+    cout << "lol";
+  } 
+  
+
+  // Boats player;
+  // player.print_boats();
+  // player.print_target_board();
+  // player.print_ship_board();
+
+  // // player.place_boat(first_coordinate, last_coordinate, "Carrier");
+  // int return_code = player.place_boat({5,0}, 'V', "Carrier");
+  // if (return_code == 1) {
+  //   cout << "incorrect ship placement";
+  // }
+  // return_code = player.place_boat({7,7}, 'V', "Battleship");
+  // if (return_code == 1) {
+  //   cout << "incorrect ship placement";
+  // }
+  // return_code = player.place_boat({6,7}, 'H', "Battleship");
+  // if (return_code == 1) {
+  //   cout << "incorrect ship placement";
+  // }
+  // return_code = player.place_boat({6,5}, 'V', "Destroyer");
+  // if (return_code == 1) {
+  //   cout << "incorrect ship placement";
+  // }
+  // player.print_ship_board();
 
   // Board my_game;
   // my_game.initialise_board();
