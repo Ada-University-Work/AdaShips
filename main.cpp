@@ -105,36 +105,34 @@ class Board {
       print_board(target_board);
     }
 
-    vector<int> format_coordinate(string coordinate) {
+    vector<int> format_coordinate(string coordinates) {
       const string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       int x_value = 0, y_value = 0, y_start_pos;
-      string x_coordinates;
 
-      vector<char> split_coordinate(coordinate.begin(), coordinate.end());
-
-      for (int i=0; i < split_coordinate.size(); i++) {
-        const auto pos = alpha.find(toupper(split_coordinate[i]));
-        if( pos != std::string::npos ) {
+      // find the position of the first alpha character in coordinates
+      for (int i=0; i < coordinates.length(); i++) {
+        if (isalpha(coordinates[i])) {
           y_start_pos = i;
           break;
         }
       }
+      if (y_start_pos==0) throw 20;
 
+      // calculate the x coordinate
+      string x_coordinates;
       for (int x=0; x < y_start_pos; x++) {
-        x_coordinates += split_coordinate[x];
+        x_coordinates += coordinates[x];
       }
       x_value = stoi(x_coordinates)-1;
 
-    
-      for (int y=y_start_pos; y < split_coordinate.size(); y++){
-        y_value += alpha.find(toupper(split_coordinate[y]));
-        if (y != y_start_pos) {
-          y_value += 26*(alpha.find(toupper(split_coordinate[y]))+1);
-        }
-        cout << "itteration y= " << y_value << endl;
+      // calculate the y coordinate
+      int result = 0;
+      for (int y=y_start_pos; y < coordinates.length(); y++){
+        result = result * 26 + (alpha.find(toupper(coordinates[y]))) + 1;
       }
-      cout << "x= " << x_value << endl;
-      cout << "y= " << y_value << endl;
+      y_value = result-1;
+
+      cout << "x " << x_value << "  y " << y_value << endl;
       return {x_value, y_value};
     }
 };
@@ -161,18 +159,21 @@ class Boats: public Board {
     }
 
     int place_boat(vector<int> start_pos, char direction, string ship_name) {
-      int ship_length, ship_num;
+      int ship_length=0, ship_num;
 
       for (int i=0; i < boats.size(); i++) {
         if (boats[i].name == ship_name) { //validate ship name in menu
           ship_length = boats[i].size;
           ship_num = i+1;
+          break;
         } 
       }
+      if (ship_length==0) cout << "\nInvalid ship name\n"; return 1;
 
       if (toupper(direction) == 'V') { 
         for (int y=start_pos[1]; y < start_pos[1]+ship_length; y++ ) {
           if (!valid_boat_placement({start_pos[0], y})) {
+            cout << "\nShip cannot be placed at those coordinates\n";
             return 1;
           }
         }
@@ -226,13 +227,24 @@ int set_up(Boats _player) {
 
         cout << "Enter where you want the ship to start (e.g. F7): ";
         getline(cin, coordinate);
+
         vector<int> formatted_coordinate = _player.format_coordinate(coordinate);
 
         cout << "Is the ship vertical(V) or horizontal(H): ";
         ship_direction = cin.get();
 
-
-        //_player.place_boat(formatted_coordinate, ship_direction, ship_entered);
+        int return_code = _player.place_boat(formatted_coordinate, ship_direction, ship_entered);
+        cout << "return code = " << return_code;
+        if (return_code == 0){
+          cout << "\nThe " << ship_entered << " ship is placed!\n";
+          _player.print_ship_board();
+          break;
+        }
+        else {
+          cout << "\nInvalid config, ship has not been placed.\nPlease try again\n";
+          break;
+        }
+        break;
 
     }
 
