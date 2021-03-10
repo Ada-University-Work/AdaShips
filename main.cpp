@@ -26,7 +26,7 @@ class Board {
           boats.push_back(boat());
 
           while (getline(getline(ssb, boat_name, ','), boat_size)){
-            boats[counter] = {boat_name, stoi(boat_size)};
+            boats[counter] = {boat_name, stoi(boat_size), false};
             counter++;
           }
         }
@@ -88,6 +88,7 @@ class Board {
     struct boat {
       string name;
       int size;
+      bool placed;
     };
     vector<boat> boats;
 
@@ -145,7 +146,12 @@ class Boats: public Board {
 
     void print_boats() {
       for (int i=0; i<boats.size(); i++) {
-        cout << boats[i].name << endl;
+        if (boats[i].placed == true) {
+          cout << boats[i].name << setw(20-boats[i].name.length()) << ": ✓" << endl;  
+        }
+        else {
+          cout << boats[i].name << setw(20-boats[i].name.length()) << ": X" << endl;
+        }
       }
     }
 
@@ -168,7 +174,14 @@ class Boats: public Board {
           break;
         } 
       }
-      if (ship_length==0) cout << "\nInvalid ship name\n"; return 1;
+      if (boats[ship_num-1].placed == true) {
+        cout << "\nShip has already been placed\n";
+        return 1;
+      }
+      if (ship_length==0) {
+        cout << "\nInvalid ship name\n";
+        return 1;
+      }
 
       if (toupper(direction) == 'V') { 
         for (int y=start_pos[1]; y < start_pos[1]+ship_length; y++ ) {
@@ -179,19 +192,31 @@ class Boats: public Board {
         }
         for (int y=start_pos[1]; y < start_pos[1]+ship_length; y++ ) {
           ship_board[start_pos[0]][y] = ship_num;
+          boats[ship_num-1].placed = true;
         }
       }
       else if (toupper(direction) == 'H') { 
         for (int x=start_pos[0]; x < start_pos[0]+ship_length; x++ ) {
           if (!valid_boat_placement({x, start_pos[1]})) {
+            cout << "\nShip cannot be placed at those coordinates\n";
             return 1;
           }
         }
         for (int x=start_pos[0]; x < start_pos[0]+ship_length; x++ ) {
           ship_board[x][start_pos[1]] = ship_num;
+          boats[ship_num-1].placed = true;
         }
       }
       return 0;
+    }
+
+    bool all_ships_placed() {
+      for (int i=0; i<boats.size(); i++) {
+        if(!boats[i].placed) {
+          return false;
+        }
+      }
+      return true;
     }
 };
 
@@ -234,23 +259,21 @@ int set_up(Boats _player) {
         ship_direction = cin.get();
 
         int return_code = _player.place_boat(formatted_coordinate, ship_direction, ship_entered);
-        cout << "return code = " << return_code;
+        
         if (return_code == 0){
           cout << "\nThe " << ship_entered << " ship is placed!\n";
           _player.print_ship_board();
-          break;
         }
         else {
           cout << "\nInvalid config, ship has not been placed.\nPlease try again\n";
-          break;
+        }
+
+        if (_player.all_ships_placed()) {
+          cout << "\nall ships placed\n";
         }
         break;
-
     }
-
   }
-  
-
   return 0;
 }
 
