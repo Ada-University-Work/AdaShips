@@ -25,7 +25,8 @@ class Boats: public Board {
     bool valid_boat_placement(vector<int> coordinate);
     int place_boat(vector<int> start_pos, char direction, string ship_name);
     bool all_ships_placed();
-    void auto_place_all_ships();
+    
+    int auto_place_all_ships();
     void auto_place_remaining_ships();
 };
 

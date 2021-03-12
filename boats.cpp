@@ -3,6 +3,59 @@
 
 using namespace std;
 
+void Boats::auto_place_ship(int ship_index) {
+  vector<int> coordinates {0, 0};
+  int boat_direction;
+  // /* initialize random seed: */
+  srand (time(NULL));
+
+  bool valid_placement = false;
+
+  while(valid_placement == false) {
+    coordinates[0] = rand() % board_size; //x
+    coordinates[1] = rand() % board_size; //y
+
+    boat_direction = rand() % 2;
+    
+    // valid_placement = true;
+    if(boat_direction == 0){ //horizontal
+      for(int x=coordinates[0]; x<coordinates[0]+boats[ship_index].size; x++) {
+        if (!valid_boat_placement({x, coordinates[1]})) {
+          valid_placement = false;
+          break;
+        }
+        else {
+          valid_placement = true;
+        }
+      }
+    }
+    else {
+      for(int y=coordinates[1]; y<coordinates[1]+boats[ship_index].size; y++) {
+        if (!valid_boat_placement({coordinates[0], y})) {
+          valid_placement = false;
+          break;
+        }
+        else {
+          valid_placement = true;
+        }
+      }
+    }
+  };
+  // cout << coordinates[0] << " and " << coordinates[1] << " valid placement\n";
+  
+  if(boat_direction == 0){ //horizontal
+      for(int x=coordinates[0]; x<coordinates[0]+boats[ship_index].size; x++) {
+        ship_board[x][coordinates[1]] = ship_index+1;
+      }
+    }
+  else {
+    for(int y=coordinates[1]; y<coordinates[1]+boats[ship_index].size; y++) {
+      ship_board[coordinates[0]][y] = ship_index+1;
+    }
+  }
+  boats[ship_index].placed = true;
+};
+
 Boats::Boats() {
   cout << "initialised boats\n";
 }
@@ -18,9 +71,9 @@ void Boats::print_boats() {
   }
 }
 
-bool Boats::valid_boat_placement(vector<int> coordinate) {
-  if (coordinate[0] < board_size && coordinate[1] < board_size) {
-    if (ship_board[coordinate[0]][coordinate[1]] == 0) {
+bool Boats::valid_boat_placement(vector<int> _coordinate) {
+  if (_coordinate[0] < board_size && _coordinate[1] < board_size) {
+    if (ship_board[_coordinate[0]][_coordinate[1]] == 0) {
       return true;
     }
   }
@@ -82,22 +135,14 @@ bool Boats::all_ships_placed() {
   return true;
 };
 
-void Boats::auto_place_ship(int ship_index) {
-  // vector<int> coordinates;
-  // /* initialize random seed: */
-  // srand (time(NULL));
-
-  // coordinates[0] = rand() % board_size; //x
-  // coordinates[1] = rand() % board_size; //y
-
-  // int boat_direction = rand() % 2;
-  // if(boat_direction == 0){ //horizontal
-  //   for(int a=coordinates[0]; a<boats[ship_index].size; a++) {
-
-  //   }
-  // }
-};
-
-void Boats::auto_place_all_ships() {
-  auto_place_ship(0);
+int Boats::auto_place_all_ships() {
+  for(int i=0; i<boats.size(); i++) {
+    if (boats[i].placed) {
+      return 1;
+    }
+    else {
+      auto_place_ship(i);
+    }
+  }
+  return 0;
 };

@@ -64,8 +64,17 @@ int set_up(Boats _player) {
         break;
 
       case 3:
-        break;
-
+        return_code =_player.auto_place_all_ships();
+        if (return_code == 0) {
+          cout << "\nAll ships are placed!\n";
+          _player.print_ship_board();
+          break;
+        }
+        else {
+          cout << "\nERROR: Ships have already been placed!\nPlease reset the board first or choose 'Auto-place remaining ships'\n";
+          break;
+        }
+      
       case 4:
         cout << "\nAre you sure you want to reset the whole board?(Y/N)\n";
 
@@ -104,7 +113,7 @@ int main() {
       break;
     }
     Boats player;
-    player.auto_place_all_ships();
-    // set_up(player);
+    //player.auto_place_all_ships();
+    set_up(player);
   }
 }
