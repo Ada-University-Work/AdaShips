@@ -27,6 +27,6 @@ class Boats: public Board {
     bool all_ships_placed();
     
     int auto_place_all_ships();
-    void auto_place_remaining_ships();
+    int auto_place_remaining_ships();
 };
 

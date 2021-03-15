@@ -1,4 +1,3 @@
-#include "headers/board.h"
 #include "headers/boats.h"
 
 using namespace std;
@@ -143,6 +142,20 @@ int Boats::auto_place_all_ships() {
     else {
       auto_place_ship(i);
     }
+  }
+  return 0;
+};
+
+int Boats::auto_place_remaining_ships() {
+  bool ship_placed = false;
+  for(int i=0; i<boats.size(); i++) {
+    if (boats[i].placed == false) {
+      auto_place_ship(i);
+      ship_placed = true;
+    }
+  }
+  if (ship_placed == false) {
+    return 1;
   }
   return 0;
 };

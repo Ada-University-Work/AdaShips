@@ -11,5 +11,6 @@
 
 #include "board.h"
 #include "boats.h"
+#include "helpers.h"
 
 int set_up(Boats _player);

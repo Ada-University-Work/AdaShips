@@ -8,6 +8,8 @@
 #include <sstream> //string stream
 #include <cctype> //for to upper
 
+#include "helpers.h"
+
 using namespace std;
 
 class Board {

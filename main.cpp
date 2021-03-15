@@ -45,7 +45,7 @@ int set_up(Boats _player) {
         cout << "Is the ship vertical(V) or horizontal(H): ";
         ship_direction = cin.get();
 
-        return_code = _player.place_boat(formatted_coordinate, ship_direction, ship_entered);
+        return_code = _player.place_boat(formatted_coordinate, ship_direction, lowercase_word(ship_entered));
         
         if (return_code == 0){
           cout << "\nThe " << ship_entered << " ship is placed!\n";
@@ -61,6 +61,16 @@ int set_up(Boats _player) {
         break;
 
       case 2:
+        return_code =_player.auto_place_remaining_ships();
+        if (return_code == 0) {
+          cout << "\nAll remaining ships are placed!\n";
+          _player.print_ship_board();
+          break;
+        }
+        else {
+          cout << "\nERROR: All ships have already been placed.\nPlease reset the board first.\n";
+          break;
+        }
         break;
 
       case 3:
@@ -91,13 +101,22 @@ int set_up(Boats _player) {
           cout << "Board reset\n";
         }
         break;
+      case 5:
+        if (_player.all_ships_placed()) {
+          cout << "\nContinuing to game...\n";
+          return 0;
+        }
+        else {
+          cout << "\nPlease place all ships before continuing\n";
+          break;
+        }
     }
   }
-  return 0;
+  return 1;
 }
 
 int main() {
-  int menu_choice = -1;
+  int menu_choice = -1, set_up_return_code;
   cout << "Welcome to Adaships!" << endl;
 
   while (menu_choice != 0) {
@@ -113,7 +132,11 @@ int main() {
       break;
     }
     Boats player;
-    //player.auto_place_all_ships();
-    set_up(player);
+    set_up_return_code = set_up(player);
+    if (set_up_return_code == 1) {
+      cout << "\nGood bye\n";
+      break;
+    }
+    cout << "\nstart game\n";
   }
 }

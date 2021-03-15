@@ -18,7 +18,7 @@ void Board::load_data() {
       boats.push_back(boat());
 
       while (getline(getline(ssb, boat_name, ','), boat_size)){
-        boats[counter] = {boat_name, stoi(boat_size), false};
+        boats[counter] = {lowercase_word(boat_name), stoi(boat_size), false};
         counter++;
       }
     }
