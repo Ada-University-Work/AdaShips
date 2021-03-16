@@ -1,4 +1,3 @@
-  
 #pragma once
 
 #include <iostream>
@@ -10,7 +9,5 @@
 #include <cctype> //for to upper
 
 #include "board.h"
-#include "boats.h"
-#include "helpers.h"
-
-int set_up(Boats _player);
+#include "setup.h"
+#include "playerVcomputer.h"

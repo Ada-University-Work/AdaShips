@@ -12,6 +12,7 @@ void Board::load_data() {
         stringstream ss(data);
         getline(ss, str_board_size, 'x');
         board_size = stoi(str_board_size);
+        cout << "\nboard size = " << board_size << endl;
     }
     else if (type == "Boat") {
       stringstream ssb(data);
@@ -42,15 +43,26 @@ void Board::print_board(int board[80][80]) {
 
   int counter = 0;
 
-  for(int j = 0; j < 10; j++) { //number coordinates
+  for(int j = 0; j < board_size; j++) { //number coordinates
     cout << setw(4) << j+1;
   }
   cout << endl;
 
-  for(char a = 'A'; a <= 'J'; a++) { //letter coordinates
-    cout << " " << a ;
+  for(char a = 0; a < board_size; a++) { //letter coordinates
+    if (a>=26 && a<52){
+      cout << 'A' << (char)((a-26)+'A');
+    }
+    else if (a>=52 && a<78) {
+      cout << 'B' << (char)((a-52)+'A');
+    }
+    else if (a>=78) {
+      cout << 'C' << (char)((a-78)+'A');
+    }
+    else {
+      cout << " " << (char)(a +'A') ;
+    }
 
-    for(int i = 0; i < 10 ; i++) {
+    for(int i = 0; i < board_size ; i++) {
 
       if(board[i][counter] == occupied || board[i][counter] == empty) {
         cout << setw(4) << " |" ;
