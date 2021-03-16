@@ -5,16 +5,16 @@ using namespace std;
 int playerVcomp() {
   int set_up_return_code;
   Boats player;
-  // Boats comp;
+  Boats comp;
 
-  // set_up_comp(comp);
+  set_up_comp(comp);
   set_up_return_code = set_up_player(player);
 
   if (set_up_return_code == 1) {
     return 1;
   }
 
-  playerVcomputer(player);
+  playerVcomputer(player, comp);
   return 0;
 }
 

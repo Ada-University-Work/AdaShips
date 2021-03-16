@@ -44,12 +44,12 @@ void Boats::auto_place_ship(int ship_index) {
   
   if(boat_direction == 0){ //horizontal
       for(int x=coordinates[0]; x<coordinates[0]+boats[ship_index].size; x++) {
-        ship_board[x][coordinates[1]] = ship_index+1;
+        board[x][coordinates[1]] = ship_index+1;
       }
     }
   else {
     for(int y=coordinates[1]; y<coordinates[1]+boats[ship_index].size; y++) {
-      ship_board[coordinates[0]][y] = ship_index+1;
+      board[coordinates[0]][y] = ship_index+1;
     }
   }
   boats[ship_index].placed = true;
@@ -72,7 +72,7 @@ void Boats::print_boats() {
 
 bool Boats::valid_boat_placement(vector<int> _coordinate) {
   if (_coordinate[0] < board_size && _coordinate[1] < board_size) {
-    if (ship_board[_coordinate[0]][_coordinate[1]] == 0) {
+    if (board[_coordinate[0]][_coordinate[1]] == 0) {
       return true;
     }
   }
@@ -106,7 +106,7 @@ int Boats::place_boat(vector<int> start_pos, char direction, string ship_name) {
       }
     }
     for (int y=start_pos[1]; y < start_pos[1]+ship_length; y++ ) {
-      ship_board[start_pos[0]][y] = ship_num;
+      board[start_pos[0]][y] = ship_num;
       boats[ship_num-1].placed = true;
     }
   }
@@ -118,7 +118,7 @@ int Boats::place_boat(vector<int> start_pos, char direction, string ship_name) {
       }
     }
     for (int x=start_pos[0]; x < start_pos[0]+ship_length; x++ ) {
-      ship_board[x][start_pos[1]] = ship_num;
+      board[x][start_pos[1]] = ship_num;
       boats[ship_num-1].placed = true;
     }
   }

@@ -15,12 +15,10 @@ using namespace std;
 class Board {
   private:
     void load_data();
-    void initialise_board(int board[80][80]);
-    void print_board(int board[80][80]);
+    void initialise_board();
 
   protected:
-    int target_board[80][80];
-    int ship_board[80][80];
+    int board[80][80];
     int board_size;
 
     struct boat {
@@ -38,4 +36,5 @@ class Board {
 
     vector<int> format_coordinate(string coordinates);
     void reset_board();
+    bool valid_coordinate(vector<int> coordinate);
 };
