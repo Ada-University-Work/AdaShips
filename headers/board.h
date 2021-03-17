@@ -37,4 +37,5 @@ class Board {
     vector<int> format_coordinate(string coordinates);
     void reset_board();
     bool valid_coordinate(vector<int> coordinate);
+    bool fire(vector<int> coordinate);
 };

@@ -181,6 +181,18 @@ bool Board::valid_coordinate(vector<int> coordinate) {
   }
 };
 
-// bool Board::fire(vector<int> coordinate) {
-//   if ()
-// };
+bool Board::fire(vector<int> coordinate) {
+  if (board[coordinate[0]][coordinate[1]] == 0) {
+    cout << "\nMISS\n";
+    return false;
+  }
+  else if (board[coordinate[0]][coordinate[1]] < 0) {
+    cout << "\nYou have already fired there\n";
+    return false;
+  }
+  else if (board[coordinate[0]][coordinate[1]] > 0) {
+    cout <<"\nHIT\n";
+    return true;
+  }
+  return false;
+};

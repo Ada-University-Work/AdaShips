@@ -3,7 +3,7 @@
 using namespace std;
 
 void place_a_ship(Boats &player) {
-  string ship_entered, coordinate;
+  string ship_entered, coordinate, lowercase_ship;
   vector<int> formatted_coordinate;
   int return_code;
   char ship_direction;
@@ -25,7 +25,10 @@ void place_a_ship(Boats &player) {
   cout << "Is the ship vertical(V) or horizontal(H): ";
   ship_direction = cin.get();
 
-  return_code = player.place_boat(formatted_coordinate, ship_direction, lowercase_word(ship_entered));
+  lowercase_ship = lowercase_word(ship_entered);
+  cout << "\nPlacing ship...\n";
+  
+  return_code = player.place_boat(formatted_coordinate, ship_direction, lowercase_ship);
   
   if (return_code == 0){
     cout << "\nThe " << ship_entered << " ship is placed!\n";

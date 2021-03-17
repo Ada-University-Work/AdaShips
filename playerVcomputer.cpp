@@ -23,12 +23,13 @@ void player_turn(Boats &_player, Boats &_comp) {
       cout << "\nInvalid coordinate\n";
     }
   }
-  
+  _comp.fire(coordinate);
   cout << "\nfire!\n";
 }
 
 void playerVcomputer(Boats &_player, Boats &_comp) {
-  cout << "game play\n";
+  cout << "computers ship board:\n";
+  _comp.print_ship_board();
   player_turn(_player, _comp);
 }
 
