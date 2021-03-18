@@ -19,7 +19,7 @@ void Board::load_data() {
       boats.push_back(boat());
 
       while (getline(getline(ssb, boat_name, ','), boat_size)){
-        boats[counter] = {lowercase_word(boat_name), stoi(boat_size), false};
+        boats[counter] = {lowercase_word(boat_name), stoi(boat_size), false, 0, false};
         counter++;
       }
     }
@@ -62,6 +62,7 @@ void Board::print_ship_board() {
   cout << endl;
 
   for(char j = 0; j < board_size; j++) { //letter coordinates
+    cout << "\nloop num inside print ship board: " << counter << endl;
     if(j >= 9){
       cout << j+1;
     }
@@ -181,9 +182,12 @@ bool Board::valid_coordinate(vector<int> coordinate) {
   }
 };
 
-bool Board::fire(vector<int> coordinate) {
+int Board::fire(vector<int> coordinate) {
+  int boat_num = board[coordinate[0]][coordinate[1]];
+
   if (board[coordinate[0]][coordinate[1]] == 0) {
     cout << "\nMISS\n";
+    board[coordinate[0]][coordinate[1]] = -1;
     return false;
   }
   else if (board[coordinate[0]][coordinate[1]] < 0) {
@@ -192,7 +196,38 @@ bool Board::fire(vector<int> coordinate) {
   }
   else if (board[coordinate[0]][coordinate[1]] > 0) {
     cout <<"\nHIT\n";
-    return true;
+    board[coordinate[0]][coordinate[1]] = -2;
+    boats[boat_num-1].hits ++;
+    return boat_num-1;
+  }
+  return -1;
+};
+
+bool Board::is_valid_target(vector<int> _coordinate) {
+  if (_coordinate[0] < board_size && _coordinate[1] < board_size) { //if position within board
+    if (board[_coordinate[0]][_coordinate[1]] >= 0) { //if position hasn't already been hit
+      return true;
+    }
   }
   return false;
+}
+
+int Board::auto_fire() {
+  vector<int> coordinates {0, 0};
+  bool valid_target = false;
+
+  srand (time(NULL));
+
+  while(valid_target == false) {
+    coordinates[0] = rand() % board_size; //x
+    coordinates[1] = rand() % board_size; //y
+
+    if(is_valid_target(coordinates)) {
+      return fire(coordinates);
+    }
+    else {
+      continue;
+    }
+  }
+  return 0;
 };

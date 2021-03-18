@@ -159,3 +159,20 @@ int Boats::auto_place_remaining_ships() {
   }
   return 0;
 };
+
+bool Boats::boat_sank(int boat) {
+  if (boats[boat].hits == boats[boat].size) {
+    boats[boat].sank = true;
+    return true;
+  }
+  return false;
+};
+
+bool Boats::all_boats_sank() {
+  for (int i=0; i < boats.size(); i++) {
+    if (!boats[i].sank) {
+      return false;
+    }
+  }
+  return true;
+};

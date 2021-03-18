@@ -25,6 +25,8 @@ class Board {
       string name;
       int size;
       bool placed;
+      int hits;
+      bool sank;
     };
     vector<boat> boats;
 
@@ -37,5 +39,7 @@ class Board {
     vector<int> format_coordinate(string coordinates);
     void reset_board();
     bool valid_coordinate(vector<int> coordinate);
-    bool fire(vector<int> coordinate);
+    int fire(vector<int> coordinate);
+    bool is_valid_target(vector<int> _coordinate);
+    int auto_fire();
 };
