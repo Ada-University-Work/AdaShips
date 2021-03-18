@@ -75,11 +75,12 @@ int player1_turn(Boats &player1, Boats &enemy) {
   
   cout << "\nPress enter to end your turn...";
   char temp = cin.get();
-
+  cin.clear();
+  
   return won;
 }
 
-bool comp_turn(Boats enemy, Boats comp) {
+bool comp_turn(Boats &enemy, Boats &comp) {
   int boat_hit, won = 0;
 
   cout << "\nComputers ship board:\n";
@@ -101,8 +102,9 @@ bool comp_turn(Boats enemy, Boats comp) {
   }
   
   cout << "\nPress enter to end the turn...";
+  
   char temp = cin.get();
-
+  cin.clear();
   return won;
 }
 

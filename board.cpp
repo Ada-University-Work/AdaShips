@@ -41,8 +41,7 @@ Board::Board() {
 };
 
 void Board::print_ship_board() {
-  const int empty    = 0;  // contains water
-
+  int empty = 0;  // contains water
   int counter = 0;
 
   for(int a = 0; a < board_size; a++) { //number coordinates
@@ -61,7 +60,7 @@ void Board::print_ship_board() {
   }
   cout << endl;
 
-  for(char j = 0; j < board_size; j++) { //letter coordinates
+  for(int j = 0; j < board_size; j++) { //letter coordinates
     cout << "\nloop num inside print ship board: " << counter << endl;
     if(j >= 9){
       cout << j+1;
@@ -109,7 +108,7 @@ void Board::print_target_board() {
   }
   cout << endl;
 
-  for(char j = 0; j < board_size; j++) { //letter coordinates
+  for(int j = 0; j < board_size; j++) { //letter coordinates
     if(j >= 9){
       cout << j+1;
     }
