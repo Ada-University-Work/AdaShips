@@ -43,6 +43,8 @@ Board::Board() {
 void Board::print_ship_board() {
   int empty = 0;  // contains water
   int counter = 0;
+  char boat_initial;
+  string boat_name;
 
   for(int a = 0; a < board_size; a++) { //number coordinates
     if (a>=26 && a<52){
@@ -61,7 +63,6 @@ void Board::print_ship_board() {
   cout << endl;
 
   for(int j = 0; j < board_size; j++) { //letter coordinates
-    cout << "\nloop num inside print ship board: " << counter << endl;
     if(j >= 9){
       cout << j+1;
     }
@@ -70,12 +71,15 @@ void Board::print_ship_board() {
     }
 
     for(int i = 0; i < board_size ; i++) {
+      // cout << "in loop\n";
 
       if(board[i][counter] == empty) {
         cout << setw(4) << " |" ;
       }
       else {
-        char boat_initial = toupper(boats[board[i][counter]-1].name.at(0));
+        boat_name = boats[(board[i][counter])-1].name;
+        boat_initial = toupper(boat_name[0]);
+
         cout << setw(2) << boat_initial << setw(2) << "|";
       }
     }
