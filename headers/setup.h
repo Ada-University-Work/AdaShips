@@ -13,7 +13,7 @@
 #include "boats.h"
 #include "helpers.h"
 
-int set_up_player(Boats &_player);
+int set_up_player(Boats &_player, string name);
 void set_up_comp(Boats &_comp);
 void place_a_ship(Boats &player);
 void place_remaining_ships(Boats &player);
