@@ -55,9 +55,7 @@ void Boats::auto_place_ship(int ship_index) {
   boats[ship_index].placed = true;
 };
 
-Boats::Boats() {
-  cout << "initialised boats\n";
-}
+Boats::Boats() {}
 
 void Boats::print_boats() {
   for (int i=0; i<boats.size(); i++) {

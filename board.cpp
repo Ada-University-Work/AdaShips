@@ -9,10 +9,9 @@ void Board::load_data() {
 
   while (getline(getline(game_config, type, ':'), data)){ //looping through each line of the file
     if (type == "Board") {
-        stringstream ss(data);
-        getline(ss, str_board_size, 'x');
-        board_size = stoi(str_board_size);
-        cout << "\nboard size = " << board_size << endl;
+      stringstream ss(data);
+      getline(ss, str_board_size, 'x');
+      board_size = stoi(str_board_size);
     }
     else if (type == "Boat") {
       stringstream ssb(data);
@@ -165,7 +164,6 @@ vector<int> Board::format_coordinate(string coordinates) {
   }
   y_value = stoi(y_coordinates)-1;
 
-  cout << "x " << x_value << "  y " << y_value << endl;
   return {x_value, y_value};
 };
 
@@ -187,23 +185,22 @@ bool Board::valid_coordinate(vector<int> coordinate) {
 
 int Board::fire(vector<int> coordinate) {
   int boat_num = board[coordinate[0]][coordinate[1]];
+  int return_num = 0;
 
   if (board[coordinate[0]][coordinate[1]] == 0) {
     cout << "\nMISS\n";
     board[coordinate[0]][coordinate[1]] = -1;
-    return false;
   }
   else if (board[coordinate[0]][coordinate[1]] < 0) {
     cout << "\nYou have already fired there\n";
-    return false;
   }
   else if (board[coordinate[0]][coordinate[1]] > 0) {
     cout <<"\nHIT\n";
     board[coordinate[0]][coordinate[1]] = -2;
     boats[boat_num-1].hits ++;
-    return boat_num-1;
+    return_num = boat_num-1;
   }
-  return -1;
+  return return_num;
 };
 
 bool Board::is_valid_target(vector<int> _coordinate) {

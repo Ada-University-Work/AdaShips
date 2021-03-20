@@ -7,6 +7,7 @@ int playerVcomp() {
   Boats player;
   Boats comp;
 
+  cin.ignore();
   set_up_comp(comp);
   set_up_return_code = set_up_player(player);
 

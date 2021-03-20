@@ -6,12 +6,14 @@ int player_turn_menu() {
   int menu_choice;
   cout << "\n\nIt is you turn, what would you like to do?\n1. Fire a torpedo\n2. Auto fire\nPlease select and option (or 0 to quit): ";
   if( ! (cin >> menu_choice)) { //catching erroneous input
-    cout << "Invalid input\n";
+    cout << "\nInvalid input\n";
     cin.clear(); //clearing the error from cin stream
     cin.ignore(10000, '\n');
     menu_choice = player_turn_menu();
   }
-  cin.ignore();
+  else {
+    cin.ignore(10000, '\n');
+  }
   return menu_choice;
 }
 
@@ -49,7 +51,6 @@ int player1_turn(Boats &player1, Boats &enemy) {
           }
           valid_coordinate = true;
         }
-        cout << "\nfire!\n";
         boat_hit = enemy.fire(coordinate);
         break;
       case 2:
@@ -63,6 +64,9 @@ int player1_turn(Boats &player1, Boats &enemy) {
     }
   } while (!valid_menu_choice);
 
+  cout << "\nYour target board:\n";
+  enemy.print_target_board();
+
   if (boat_hit > -1) {
     if(enemy.boat_sank(boat_hit)){
       cout << "The boat has been sank!\n";
@@ -73,9 +77,11 @@ int player1_turn(Boats &player1, Boats &enemy) {
     }
   }
   
-  cout << "\nPress enter to end your turn...";
-  char temp = cin.get();
-  cin.clear();
+  if (won != 1) {
+    cout << "\nPress enter to end your turn...";
+    char temp = cin.get();
+    cin.clear();
+  }
   
   return won;
 }
@@ -83,13 +89,15 @@ int player1_turn(Boats &player1, Boats &enemy) {
 bool comp_turn(Boats &enemy, Boats &comp) {
   int boat_hit, won = 0;
 
-  cout << "\nComputers ship board:\n";
+  cout << "\nThe computers ship board:\n";
   comp.print_ship_board();
 
-  cout << "\nComputers target board:\n";
+  cout << "\nThe computers target board:\n";
   enemy.print_target_board();
 
   boat_hit = enemy.auto_fire();
+  cout << "\nThe computers target board:\n";
+  enemy.print_target_board();
   
   if (boat_hit > -1) {
     if(enemy.boat_sank(boat_hit)){
@@ -112,24 +120,29 @@ void playerVcomputer(Boats &_player, Boats &_comp) {
   bool comp_won = false;
   int player_won = 0;
 
-  cout << "computers ship board:\n";
-  _comp.print_ship_board();
-
   while (player_won == 0 && comp_won == false) {
+    system("clear");
+    cout << "\nIT'S YOUR TURN:\n";
     player_won = player1_turn(_player, _comp);
     if (player_won!=0) {
       continue;
     }
+    system("clear");
+    cout << "\nIT'S THE COMPUTERS TURN:\n";
     comp_won = comp_turn(_player, _comp);
   }
 
   if (player_won == 1) {
-    cout << "You won! :)\n";
+    cout << "\nYou won! :)\n\n";
   }
   else if (player_won == -1) {
-    cout << "quiting...";
+    cout << "\nQuiting game...\n\n";
   }
   else {
-    cout << "You lost! :(\n";
+    cout << "\nYou lost! :(\n\n";
   }
+
+  cout << "\nPress enter to return to menu...";
+  char temp = cin.get();
+  cin.clear();
 }
