@@ -1,4 +1,4 @@
-#include "headers/playerVcomputer.h"
+#include "headers/gameplay.h"
 
 using namespace std;
 
@@ -17,14 +17,14 @@ int player_turn_menu() {
   return menu_choice;
 }
 
-int player1_turn(Boats &player1, Boats &enemy) {
+int player_turn(Boats &player, Boats &enemy) {
   bool valid_coordinate = false, returnCode, valid_menu_choice = true;
   string coordinate_str;
   vector<int> coordinate;
   int boat_hit, won = 0; // 1 = won the game, -1 = quit, 0 = not won
 
   cout << "\nYour ship board:\n";
-  player1.print_ship_board();
+  player.print_ship_board();
 
   cout << "\nYour target board:\n";
   enemy.print_target_board();
@@ -123,7 +123,7 @@ void playerVcomputer(Boats &_player, Boats &_comp) {
   while (player_won == 0 && comp_won == false) {
     system("clear");
     cout << "\nIT'S YOUR TURN:\n";
-    player_won = player1_turn(_player, _comp);
+    player_won = player_turn(_player, _comp); // 1 = won the game, -1 = quit, 0 = not won
     if (player_won!=0) {
       continue;
     }
@@ -140,6 +140,37 @@ void playerVcomputer(Boats &_player, Boats &_comp) {
   }
   else {
     cout << "\nYou lost! :(\n\n";
+  }
+
+  cout << "\nPress enter to return to menu...";
+  char temp = cin.get();
+  cin.clear();
+}
+
+void two_player_game(Boats &_player1, Boats &_player2) {
+  int player2_won = 0, player1_won = 0;
+
+  while (player1_won == 0 && player2_won == 0) {
+    system("clear");
+    cout << "\nPLAYER 1'S TURN:\n";
+    player1_won = player_turn(_player1, _player2); // 1 = won the game, -1 = quit, 0 = not won
+    if (player1_won != 0) {
+      continue;
+    }
+    system("clear");
+    cout << "\nPLAYER 2'S TURN:\n";
+    player2_won = player_turn(_player2, _player1);
+  }
+
+  if (player1_won == -1 || player2_won == -1) {
+    cout << "\nQuiting game...\n\n";
+  }
+  else if (player1_won == 1) {
+    cout << "\nPLAYER 1 WINS! :)\n\n";
+  }
+  
+  else if (player2_won == 1) {
+    cout << "\nPLAYER 2 WINS! :)\n\n";
   }
 
   cout << "\nPress enter to return to menu...";

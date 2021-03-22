@@ -10,4 +10,4 @@
 
 #include "board.h"
 #include "setup.h"
-#include "playerVcomputer.h"
+#include "gameplay.h"

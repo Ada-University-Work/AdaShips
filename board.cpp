@@ -40,10 +40,15 @@ Board::Board() {
 };
 
 void Board::print_ship_board() {
+  // cout << "\nship board\n";
   int empty = 0;  // contains water
+  int miss     = -1;  // shot into ocean
+  int hit      = -2;  // shot and hit
+
   int counter = 0;
   char boat_initial;
   string boat_name;
+  int boat_index=0;
 
   for(int a = 0; a < board_size; a++) { //number coordinates
     if (a>=26 && a<52){
@@ -70,13 +75,17 @@ void Board::print_ship_board() {
     }
 
     for(int i = 0; i < board_size ; i++) {
-      // cout << "in loop\n";
 
-      if(board[i][counter] == empty) {
+      if(board[i][counter] == empty || board[i][counter] == miss) {
         cout << setw(4) << " |" ;
       }
+      else if (board[i][counter] == hit) {
+        cout << setw(2) << 'x' << setw(2) << "|";
+      }
       else {
-        boat_name = boats[(board[i][counter])-1].name;
+        boat_index = board[i][counter];
+        boat_index -= 1;
+        boat_name = boats[boat_index].name;
         boat_initial = toupper(boat_name[0]);
 
         cout << setw(2) << boat_initial << setw(2) << "|";

@@ -8,7 +8,13 @@ int playerVcomp() {
   Boats comp;
 
   cin.ignore();
+
+  system("clear");
+  cout << "\nSETTING UP THE COMPUTERS BOARD:\n";
   set_up_comp(comp);
+
+  system("clear");
+  cout << "\nSETTING UP YOUR BOARD:\n";
   set_up_return_code = set_up_player(player);
 
   if (set_up_return_code == 1) {
@@ -26,24 +32,36 @@ int two_player() {
 
   cin.ignore();
   
-  set_up_return_code1 = set_up_player(player1, "PLAYER 1");
-  set_up_return_code2 = set_up_player(player2, "PLAYER 2");
+  system("clear");
+  cout << "\nSETTING UP PLAYER 1's BOARD:\n";
+  set_up_return_code1 = set_up_player(player1);
 
-  if (set_up_return_code1 == 1 || set_up_return_code2 == 1) {
-    return 1;
+  if (set_up_return_code1 == 1) {
+    return 0;
   }
 
-  playerVcomputer(player1, player2);
+  system("clear");
+  cout << "\nSETTING UP PLAYER 2's BOARD:\n";
+  set_up_return_code2 = set_up_player(player2);
+
+  if (set_up_return_code2 == 1) {
+    return 0;
+  }
+
+  two_player_game(player1, player2);
   return 0;
 }
 
 int main() {
   int menu_choice = -1, return_code;
-  
-  cout << "Welcome to Adaships!" << endl;
+  bool continue_playing = true;
 
-  while (menu_choice != 0) {
-    cout << "1. One player V computer game\n2. Two player game\n3. One player V computer (salvo) game\n4. Two player (salvo) game\n\nPlease select an option (or 0 to quit): ";
+  while (continue_playing == true) {
+    system("clear");
+    cout << "Welcome to Adaships!" << endl;
+
+    cout << "\n1. One player V computer game\n2. Two player game\n3. One player V computer (salvo) game\n4. Two player (salvo) game\n\nPlease select an option (or 0 to quit): ";
+
     if( ! (cin >> menu_choice)) { //catching erroneous input
       cout << "Invalid input\n";
       cin.clear(); //clearing the error from cin stream
@@ -54,24 +72,27 @@ int main() {
 
     switch (menu_choice) {
       case 0:
+        continue_playing = false;
         break;
 
       case 1:
         return_code = playerVcomp();
         if (return_code == 1) {
-          menu_choice = 0;
+          continue_playing = false;
+          break;
         }
         break;
 
       case 2:
         return_code = two_player();
         if (return_code == 1) {
-          menu_choice = 0;
+          continue_playing = false;
+          break;
         }
         break;
       
       default:
-        cout << "\nInvalid Input, please try again...\n";
+        cout << "\nXXXXXX Invalid Input, please try again...\n";
         break;
     }
   }
