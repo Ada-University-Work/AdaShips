@@ -26,7 +26,7 @@ void Board::load_data() {
   game_config.close(); //closing the data file to save memory
 };
 
-void Board::initialise_board() {
+void Board::initialise_board(int _board[80][80]) {
   for (int y=0; y<board_size; y++) {
     for (int x=0; x<board_size; x++) {
       board[x][y] = 0;
@@ -36,7 +36,8 @@ void Board::initialise_board() {
 
 Board::Board() {
   load_data();
-  initialise_board();
+  initialise_board(board);
+  initialise_board(mine_board);
 };
 
 void Board::print_ship_board() {
@@ -75,19 +76,31 @@ void Board::print_ship_board() {
 
     for(int i = 0; i < board_size ; i++) {
 
-      if(board[i][counter] == empty || board[i][counter] == miss) {
-        cout << setw(4) << " |" ;
-      }
-      else if (board[i][counter] == hit) {
+      if (board[i][counter] == hit) {
         cout << setw(2) << 'x' << setw(2) << "|";
       }
-      else {
+
+      else if(board[i][counter] == empty || board[i][counter] == miss) {
+        if(mine_board[i][counter] == 1) {
+          cout << setw(2) << 'm' << setw(2) << "|";
+        }
+        else {
+          cout << setw(4) << " |" ;
+        }
+      }
+      
+      else if (board[i][counter] >= 1){
         boat_index = board[i][counter];
         boat_index -= 1;
         boat_name = boats[boat_index].name;
         boat_initial = toupper(boat_name[0]);
 
-        cout << setw(2) << boat_initial << setw(2) << "|";
+        if(mine_board[i][counter] == 1) {
+          cout << setw(1) << boat_initial << "/m" << setw(1) << "|";  
+        }
+        else {
+          cout << setw(2) << boat_initial << setw(2) << "|";
+        }
       }
     }
     cout << "\n";
@@ -176,7 +189,7 @@ vector<int> Board::format_coordinate(string coordinates) {
 };
 
 void Board::reset_board() {
-  initialise_board();
+  initialise_board(board);
   for(int i=0; i < boats.size(); i++) {
     boats[i].placed = false;
   };
@@ -211,9 +224,9 @@ int Board::fire(vector<int> coordinate) {
   return return_num;
 };
 
-bool Board::is_valid_target(vector<int> _coordinate) {
+bool Board::is_valid_target(vector<int> _coordinate, int _board[80][80]) {
   if (_coordinate[0] < board_size && _coordinate[1] < board_size) { //if position within board
-    if (board[_coordinate[0]][_coordinate[1]] >= 0) { //if position hasn't already been hit
+    if (_board[_coordinate[0]][_coordinate[1]] >= 0) { //if position hasn't already been hit
       return true;
     }
   }
@@ -231,7 +244,7 @@ int Board::auto_fire() {
     coordinates[0] = rand() % board_size; //x
     coordinates[1] = rand() % board_size; //y
 
-    if(is_valid_target(coordinates)) {
+    if(is_valid_target(coordinates, board)) {
       boat_hit = fire(coordinates);
       valid_target = true;
       continue;
@@ -254,3 +267,86 @@ vector<int> Board::auto_fire_salvo(int shots) {
 
   return boats_hit;
 };
+
+vector<int> Board::valid_mine_placement() {
+  vector<int> coordinates {0, 0};
+  bool valid_target = false;
+
+  srand (time(NULL));
+
+  while(valid_target == false) {
+    coordinates[0] = rand() % board_size; //x
+    coordinates[1] = rand() % board_size; //y
+
+    if(is_valid_target(coordinates, mine_board)) {
+      if(mine_board[coordinates[0]][coordinates[1]] != 1) {
+        valid_target = true;
+        continue;
+      }
+    }
+  }
+  return coordinates;
+}
+
+void Board::set_mines() {
+  int mines = 5;
+  vector<int> coordinate;
+  
+  for(int i=0; i < mines; i++) {
+    coordinate = valid_mine_placement();
+    mine_board[coordinate[0]][coordinate[1]] = 1;
+  }
+}
+
+vector<int> Board::fire_mines(vector<int> coordinate) {
+  int x = coordinate[0], y = coordinate[1];
+  vector<int> boats_hit;
+  vector<int> returned_vector;
+
+  if (board[x][y] < 0) {
+    cout << "\nYou have already fired there\n";
+    return {0};
+  }
+  else if (mine_board[x][y] == 1) {
+    mine_board[coordinate[0]][coordinate[1]] = 0;
+    cout << "\nMINE HIT!\n";
+
+    for(int X=x-1; X <= x+1; X++){
+      for(int Y=y-1; Y <= y+1; Y++){
+
+        if( X < 0 || Y < 0 || X > board_size || Y > board_size || board[X][Y] < 0) {
+          continue;
+        }
+        returned_vector = fire_mines({X, Y});
+        boats_hit.insert(boats_hit.end(), returned_vector.begin(), returned_vector.end());
+      }
+    }
+  }
+  else {
+    boats_hit.push_back(fire(coordinate));
+  }
+  return boats_hit;
+};
+
+vector<int> Board::auto_fire_mines() {
+  vector<int> coordinates {0, 0};
+  bool valid_target = false;
+  vector<int> boats_hit;
+
+  srand (time(NULL));
+
+  while(valid_target == false) {
+    coordinates[0] = rand() % board_size; //x
+    coordinates[1] = rand() % board_size; //y
+
+    if(is_valid_target(coordinates, board)) {
+      boats_hit = fire_mines(coordinates);
+      valid_target = true;
+      continue;
+    }
+    else {
+      continue;
+    }
+  }
+  return boats_hit;
+}

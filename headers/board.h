@@ -15,11 +15,13 @@ using namespace std;
 class Board {
   private:
     void load_data();
-    void initialise_board();
+    void initialise_board(int _board[80][80]);
+    vector<int> valid_mine_placement();
 
   protected:
     int board[80][80];
     int board_size;
+    int mine_board[80][80];
 
     struct boat {
       string name;
@@ -29,6 +31,7 @@ class Board {
       bool sank;
     };
     vector<boat> boats;
+    vector<int> generate_coordinate(int _board[80][80]);
 
   public:
     Board();
@@ -40,7 +43,10 @@ class Board {
     void reset_board();
     bool valid_coordinate(vector<int> coordinate);
     int fire(vector<int> coordinate);
-    bool is_valid_target(vector<int> _coordinate);
+    bool is_valid_target(vector<int> _coordinate, int _board[80][80]);
     int auto_fire();
     vector<int> auto_fire_salvo(int shots);
+    void set_mines();
+    vector<int> fire_mines(vector<int> coordinate);
+    vector<int> auto_fire_mines();
 };

@@ -167,3 +167,12 @@ int set_up_player(Boats &_player) {
   }
   return 1;
 }
+
+void set_up_mines(Boats &_player) {
+  cout << "\nMines are displayed with an 'm'\n";
+  cout << "Your mines are placed:\n";
+  _player.set_mines();
+  _player.print_ship_board();
+  cout << "\nPress enter to continue...\n";
+  char temp = cin.get();
+}

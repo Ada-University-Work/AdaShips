@@ -19,3 +19,4 @@ void place_a_ship(Boats &player);
 void place_remaining_ships(Boats &player);
 void place_all_ships(Boats &player);
 void reset_board(Boats &player);
+void set_up_mines(Boats &_player);
