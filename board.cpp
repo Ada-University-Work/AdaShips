@@ -40,7 +40,6 @@ Board::Board() {
 };
 
 void Board::print_ship_board() {
-  // cout << "\nship board\n";
   int empty = 0;  // contains water
   int miss     = -1;  // shot into ocean
   int hit      = -2;  // shot and hit
@@ -194,7 +193,7 @@ bool Board::valid_coordinate(vector<int> coordinate) {
 
 int Board::fire(vector<int> coordinate) {
   int boat_num = board[coordinate[0]][coordinate[1]];
-  int return_num = 0;
+  int return_num = -1;
 
   if (board[coordinate[0]][coordinate[1]] == 0) {
     cout << "\nMISS\n";
@@ -224,6 +223,7 @@ bool Board::is_valid_target(vector<int> _coordinate) {
 int Board::auto_fire() {
   vector<int> coordinates {0, 0};
   bool valid_target = false;
+  int boat_hit;
 
   srand (time(NULL));
 
@@ -232,11 +232,25 @@ int Board::auto_fire() {
     coordinates[1] = rand() % board_size; //y
 
     if(is_valid_target(coordinates)) {
-      return fire(coordinates);
+      boat_hit = fire(coordinates);
+      valid_target = true;
+      continue;
     }
     else {
       continue;
     }
   }
-  return 0;
+  return boat_hit;
+};
+
+vector<int> Board::auto_fire_salvo(int shots) {
+  vector<int> boats_hit;
+  int boat_hit;
+
+  for (int i=0; i < shots; i++) {
+    boat_hit = auto_fire();
+    boats_hit.push_back(boat_hit);
+  }
+
+  return boats_hit;
 };

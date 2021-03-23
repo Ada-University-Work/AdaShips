@@ -52,9 +52,60 @@ int two_player() {
   return 0;
 }
 
+int two_player_salvo() {
+  int set_up_return_code1, set_up_return_code2;
+  Boats player1;
+  Boats player2;
+
+  cin.ignore();
+  
+  system("clear");
+  cout << "\nSETTING UP PLAYER 1's BOARD:\n";
+  set_up_return_code1 = set_up_player(player1);
+
+  if (set_up_return_code1 == 1) {
+    return 0;
+  }
+
+  system("clear");
+  cout << "\nSETTING UP PLAYER 2's BOARD:\n";
+  set_up_return_code2 = set_up_player(player2);
+
+  if (set_up_return_code2 == 1) {
+    return 0;
+  }
+
+  two_player_game_salvo(player1, player2);
+  return 0;
+}
+
+int playerVcomp_salvo() {
+  int set_up_return_code;
+  Boats player;
+  Boats comp;
+
+  cin.ignore();
+
+  system("clear");
+  cout << "\nSETTING UP THE COMPUTERS BOARD:\n";
+  set_up_comp(comp);
+
+  system("clear");
+  cout << "\nSETTING UP YOUR BOARD:\n";
+  set_up_return_code = set_up_player(player);
+
+  if (set_up_return_code == 1) {
+    return 1;
+  }
+
+  playerVcomputer_salvo(player, comp);
+  return 0;
+}
+
 int main() {
   int menu_choice = -1, return_code;
   bool continue_playing = true;
+  char temp;
 
   while (continue_playing == true) {
     system("clear");
@@ -90,9 +141,27 @@ int main() {
           break;
         }
         break;
-      
+
+      case 3:
+        return_code = playerVcomp_salvo();
+        if (return_code == 1) {
+          continue_playing = false;
+          break;
+        }
+        break;
+
+      case 4:
+        return_code = two_player_salvo();
+        if (return_code == 1) {
+          continue_playing = false;
+          break;
+        }
+        break;
+
       default:
-        cout << "\nXXXXXX Invalid Input, please try again...\n";
+        cout << "\nInvalid Input, press enter to try again...";
+        temp = cin.get();
+        
         break;
     }
   }
