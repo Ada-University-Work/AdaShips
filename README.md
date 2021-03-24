@@ -49,6 +49,37 @@ I've made tickets for each task on a kanban board so I can record my progress.
 [link to kanban board](https://trello.com/b/puDcYRLf)
 
 ## Development
+### Use of good standards
+
+I have strived to use good coding standards throughout my code. The standards are:
+
+• Include good quality, clear, jargon free and up to date internal documentation / comments; adopt
+the philosophy of writing comments for non-programmers.
+• Eliminate or minimise code duplication & any unnecessary redundancy.
+• Strive for simplicity in logic and flow.
+• Use a consistent naming convention for functions, variables, objects, etc to provide clear contextual
+value, improved comprehension and quick readability.
+• Use appropriate and consistent indentation, logical grouping and spaced blocks within your
+codebases; adopt tabs or a set number of spaces for indenting.
+• Use spaces consistently to separate operators and delimiters.
+• Be consistent when aligning braces; use a vertically or slanted style.
+• Avoid deep nested conditionals.
+• Avoid single (long) lines of code containing multiple operations; consider ‘one line one instruction”.
+• Keep variable lifetimes and scope as short and as small as possible.
+• Avoid multipurpose functions and variables.
+• Conserve system resources.
+• Minimise forced type conversion, coercion or casting.
+• Know and test your code: adopt a personal and rigorous testing strategy; don’t just see it if works -
+test and fix its limits.
+• Test early and often, fail fast and resolve effectively.
+
+### Development phases
+I completed one epic per phase of development. These are outlined in my kanban board linked above.
+
+### Code quality
+After each code change I rigorously tested the programme, checking for any bugs. I tested using erroneous input, edge cases and standard input.
+
+### Key design challeneges
 
 
 # Known Issues
