@@ -108,9 +108,21 @@ for(int X=x-1; X <= x+1; X++){
 ```
 
 ### Implementation
-I used advanced programming principles throughout my code, including class inheritance ( the boat inherits the board class) and recursion in my fire_mines function etc.
+I used advanced programming principles throughout my code, including class inheritance (the boat inherits the board class) and recursion in my fire_mines function etc.
+Advanced programming priciples I have used are:
+Modularsation
+I have broken the system into independant components, functions, classes and methods meaning my code can be more easily supported, it is easier to maintain because modifications can be made easier and faster and it is more reusable because code can be shared multiple times across different files without me needing to redesign.
+
+Cohesion
+My code has high levels of module cohesion because the design of my classes is very focused and all the methods within the class are functonally related. Although one caveat in my programme design is that my boats are defined in my board class instead of my boat class which is not very cohesive because the boat information is more functionaly related to my boats class than to my board class. If I had more time I would go back and fix this by moving my load_data method outside of the board class and into a seperate function that I call at the start of every game and then pass the data returned from that function into my class constructor to save the data into the relevant places.
+
+Coupling
+My code has a low level of coupling allowing for an optimal level of interdependancy between components. For example I am making sure to only pass data between components when it is necessary and the data is being directly used. Another is example is my low level of reliance of thrid-party modules, I use no thrid party modules in my programme this has some downsides - for example I could have used the Boost module to lowercase a string but instead I wrote my own function to lowercase a string manually, this is located in my 'helpers.cpp' file. I have also completely avoided using global variables within this project and instead opted for a minimal amount of variables been stored publicly within my classes.
 
 ### Feature Showcase
+One of my key designs of my programme is the modularsation of my firing functions within my board class.
+Here is a diagram of the relation between the methods:
+
 
 ### Improved Targetting Algorithm
 I did not get to this section of the assignment because I ran out of time to completed but my basic plan for tackling this problem is outlined in this ticket:
