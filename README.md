@@ -122,7 +122,7 @@ My code has a low level of coupling allowing for an optimal level of interdepend
 ### Feature Showcase
 One of my key designs of my programme is the modularsation of my firing functions within my board class.
 Here is a diagram of the relation between the methods:
-
+![diagram](/diagram.png)
 
 ### Improved Targetting Algorithm
 I did not get to this section of the assignment because I ran out of time to completed but my basic plan for tackling this problem is outlined in this ticket:
