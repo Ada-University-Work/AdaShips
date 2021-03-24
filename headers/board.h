@@ -42,4 +42,5 @@ class Board {
     int fire(vector<int> coordinate);
     bool is_valid_target(vector<int> _coordinate);
     int auto_fire();
+    vector<int> auto_fire_salvo(int shots);
 };

@@ -40,8 +40,7 @@ void Boats::auto_place_ship(int ship_index) {
       }
     }
   };
-  // cout << coordinates[0] << " and " << coordinates[1] << " valid placement\n";
-  
+ 
   if(boat_direction == 0){ //horizontal
       for(int x=coordinates[0]; x<coordinates[0]+boats[ship_index].size; x++) {
         board[x][coordinates[1]] = ship_index+1;
@@ -174,3 +173,14 @@ bool Boats::all_boats_sank() {
   }
   return true;
 };
+
+int Boats::boats_remaining() {
+  int boats_alive = 0;
+
+  for (int i=0; i < boats.size(); i++) {
+    if (!boats[i].sank) {
+      boats_alive ++;
+    }
+  }
+  return boats_alive;
+}

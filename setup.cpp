@@ -86,8 +86,6 @@ void reset_board(Boats &player){
 }
 
 void set_up_comp(Boats &_comp) {
-  system("clear");
-  cout << "\nSETTING UP THE COMPUTERS BOARD:\n";
   _comp.auto_place_all_ships();
 
   cout << "\nThe computers ship board:\n";
@@ -103,15 +101,13 @@ void set_up_comp(Boats &_comp) {
 
 int set_up_player(Boats &_player) {
   int menu_choice = -1;
+  bool continue_setup = true;
   string are_your_sure;
 
-  system("clear");
-  cout << "\nSET UP YOUR BOARD:\n";
-
-  while (menu_choice != 0) {
+  while (continue_setup == true) {
 
     cout << "\nFirst you need to set up your board.\n";
-    cout << "1. Place a ship\n2. Auto-place remaining ships\n3. Auto-place all ships\n4. Reset board\n5. Continue to game\nPlease select an option (or 0 to quit): ";
+    cout << "1. Place a ship\n2. Auto-place remaining ships\n3. Auto-place all ships\n4. Reset board\n5. Continue\nPlease select an option (or 0 to quit): ";
   
     if( ! (cin >> menu_choice)) { //catching erroneous input
       cout << "Invalid input\n";
@@ -123,6 +119,9 @@ int set_up_player(Boats &_player) {
     cin.ignore();
 
     switch (menu_choice) {
+      case 0:
+        continue_setup = false;
+        break;
       case 1:
         place_a_ship(_player);
         break;
@@ -166,6 +165,5 @@ int set_up_player(Boats &_player) {
         break;
     }
   }
-
   return 1;
 }

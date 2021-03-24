@@ -30,5 +30,6 @@ class Boats: public Board {
     int auto_place_remaining_ships();
     bool boat_sank(int boat);
     bool all_boats_sank();
+    int boats_remaining();
 };
 
