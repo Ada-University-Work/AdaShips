@@ -114,6 +114,29 @@ vector<int> fire_salvo(Boats &_player, Boats &_enemy) {
   return boats_hit;
 }
 
+vector<int> fire_mine(Boats &_enemy) {
+  bool valid_coordinate = false;
+  string coordinate_str;
+  vector<int> coordinate;
+  vector<int> boats_hit;
+
+  while (valid_coordinate == false) {
+    cout << "\n\nEnter a coordinate to fire at: ";
+    getline(cin, coordinate_str);
+    try {
+      coordinate = format_valid_coordinate(coordinate_str, _enemy);
+    }
+    catch(string error) {
+      cout << error;
+      continue;
+    }
+    valid_coordinate = true;
+  }
+
+  boats_hit = _enemy.fire_mines(coordinate);
+  return boats_hit;
+}
+
 // turn functions
 
 int player_turn(Boats &player, Boats &enemy) {
@@ -220,6 +243,61 @@ int player_turn_salvo(Boats &player, Boats &enemy) {
   return won;
 }
 
+
+int player_turn_mines(Boats &player, Boats &enemy) {
+  bool valid_menu_choice = true;
+  int won = 0; // 1 = won the game, -1 = quit, 0 = not won
+  vector<int> boats_hit;
+
+  cout << "\nYour ship board:\n";
+  player.print_ship_board();
+
+  cout << "\nYour target board:\n";
+  enemy.print_target_board();
+
+  do {
+    switch (player_turn_menu()){
+      case 0:
+        return -1;
+      case 1:
+        valid_menu_choice = true;
+        boats_hit = fire_mine(enemy);
+        break;
+      case 2:
+        valid_menu_choice = true;
+        boats_hit = enemy.auto_fire_mines();
+        break;
+      default:
+        cout << "\nInvalid option\n";
+        valid_menu_choice = false;
+        break;
+    }
+  } while (!valid_menu_choice);
+
+  cout << "\nYour target board:\n";
+  enemy.print_target_board();
+
+  for (int i=0; i < boats_hit.size(); i++) {
+    if (boats_hit[i] > -1) {
+      if(enemy.boat_sank(boats_hit[i])){
+        cout << "The boat has been sank!\n";
+      }
+    }
+  }
+
+  if(enemy.all_boats_sank()) {
+    cout << "All boats have sank!\n";
+    won = 1;
+  }
+  
+  if (won != 1) {
+    cout << "\nPress enter to end your turn...";
+    char temp = cin.get();
+    cin.clear();
+  }
+  return won;
+}
+
 bool comp_turn(Boats &enemy, Boats &comp) {
   int boat_hit, won = 0;
 
@@ -285,6 +363,40 @@ bool comp_turn_salvo(Boats &enemy, Boats &comp) {
   return won;
 }
 
+bool comp_turn_mines(Boats &enemy, Boats &comp) {
+  int boat_hit, won = 0;
+  vector<int> boats_hit;
+
+  cout << "\nThe computers ship board:\n";
+  comp.print_ship_board();
+
+  cout << "\nThe computers target board:\n";
+  enemy.print_target_board();
+
+  boats_hit = enemy.auto_fire_mines();
+
+  cout << "\nThe computers target board:\n";
+  enemy.print_target_board();
+  
+  for (int i=0; i < boats_hit.size(); i++) {
+    if (boats_hit[i] > -1) {
+      if(enemy.boat_sank(boats_hit[i])){
+        cout << "The boat has been sank!\n";
+      }
+    }
+  }
+  if(enemy.all_boats_sank()) {
+    cout << "All boats have sank!\n";
+    won = 1;
+  }
+
+  cout << "\nPress enter to end the turn...";
+  char temp = cin.get();
+  cin.clear();
+
+  return won;
+}
+
 // game mode functions
 
 void playerVcomputer(Boats &_player, Boats &_comp) {
@@ -332,6 +444,37 @@ void playerVcomputer_salvo(Boats &_player, Boats &_comp) {
     system("clear");
     cout << "\nIT'S THE COMPUTERS TURN:\n";
     comp_won = comp_turn_salvo(_player, _comp);
+  }
+
+  if (player_won == 1) {
+    cout << "\nYou won! :)\n\n";
+  }
+  else if (player_won == -1) {
+    cout << "\nQuiting game...\n\n";
+  }
+  else {
+    cout << "\nYou lost! :(\n\n";
+  }
+
+  cout << "\nPress enter to return to menu...";
+  char temp = cin.get();
+  cin.clear();
+}
+
+void playerVcomputer_mines(Boats &_player, Boats &_comp) {
+  bool comp_won = false;
+  int player_won = 0;
+
+  while (player_won == 0 && comp_won == false) {
+    system("clear");
+    cout << "\nIT'S YOUR TURN:\n";
+    player_won = player_turn_mines(_player, _comp); // 1 = won the game, -1 = quit, 0 = not won
+    if (player_won!=0) {
+      continue;
+    }
+    system("clear");
+    cout << "\nIT'S THE COMPUTERS TURN:\n";
+    comp_won = comp_turn_mines(_player, _comp);
   }
 
   if (player_won == 1) {
@@ -404,6 +547,65 @@ void two_player_game_salvo(Boats &_player1, Boats &_player2) {
   
   else if (player2_won == 1) {
     cout << "\nPLAYER 2 WINS! :)\n\n";
+  }
+
+  cout << "\nPress enter to return to menu...";
+  char temp = cin.get();
+  cin.clear();
+}
+
+void two_player_game_mines(Boats &_player1, Boats &_player2) {
+  int player2_won = 0, player1_won = 0;
+
+  while (player1_won == 0 && player2_won == 0) {
+    system("clear");
+    cout << "\nPLAYER 1'S TURN:\n";
+    player1_won = player_turn_mines(_player1, _player2); // 1 = won the game, -1 = quit, 0 = not won
+    if (player1_won != 0) {
+      continue;
+    }
+    system("clear");
+    cout << "\nPLAYER 2'S TURN:\n";
+    player2_won = player_turn_mines(_player2, _player1);
+  }
+
+  if (player1_won == -1 || player2_won == -1) {
+    cout << "\nQuiting game...\n\n";
+  }
+  else if (player1_won == 1) {
+    cout << "\nPLAYER 1 WINS! :)\n\n";
+  }
+  
+  else if (player2_won == 1) {
+    cout << "\nPLAYER 2 WINS! :)\n\n";
+  }
+
+  cout << "\nPress enter to return to menu...";
+  char temp = cin.get();
+  cin.clear();
+}
+
+void computerVcomputer_mines(Boats &_comp1, Boats &_comp2) {
+  int comp2_won = 0, comp1_won = 0;
+
+  while (comp1_won == 0 && comp2_won == 0) {
+    system("clear");
+    cout << "\nCOMPUTER 1'S TURN:\n";
+    comp1_won = comp_turn_mines(_comp2, _comp1); // 1 = won the game, -1 = quit, 0 = not won
+    if (comp1_won != 0) {
+      continue;
+    }
+    system("clear");
+    cout << "\nCOMPUTER 2'S TURN:\n";
+    comp2_won = comp_turn_mines(_comp1, _comp2);
+  }
+
+  if (comp1_won == 1) {
+    cout << "\nCOMPUTER 1 WINS! :)\n\n";
+  }
+  
+  else if (comp2_won == 1) {
+    cout << "\nCOMPUTER 2 WINS! :)\n\n";
   }
 
   cout << "\nPress enter to return to menu...";
